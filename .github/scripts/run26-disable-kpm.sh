@@ -18,6 +18,9 @@ test -x scripts/config
 ./scripts/config --file "$OUT_DIR/.config" -e DEVTMPFS
 # ./scripts/config --file "$OUT_DIR/.config" -e DEVTMPFS_MOUNT
 ./scripts/config --file "$OUT_DIR/.config" -e USER_NS || true
+# Docker/droidspaces: POSIX message queues needed for /dev/mqueue mounts
+./scripts/config --file "$OUT_DIR/.config" -e POSIX_MQUEUE
+./scripts/config --file "$OUT_DIR/.config" -e POSIX_MQUEUE_SYSCTL || true
 
 unset LLVM LLVM_IAS KBUILD_COMPILER_STRING
 make O="$OUT_DIR" ARCH=arm64 LOCALVERSION=+ \
