@@ -9,7 +9,17 @@ echo '===== RUN26 ReSukiSU: force CONFIG_KPM off ====='
 test -f "$OUT_DIR/.config"
 test -x scripts/config
 
-./scripts/config --file "$OUT_DIR/.config" -d KPM || true
+./scripts/config --file "$OUT_DIR/.config" -d KPM
+# Droidspaces: PID/IPC 命名空间 + devtmpfs（MUST/REQUIRED）
+./scripts/config --file "$OUT_DIR/.config" -e SYSVIPC
+./scripts/config --file "$OUT_DIR/.config" -e SYSVIPC_SYSCTL
+./scripts/config --file "$OUT_DIR/.config" -e PID_NS
+./scripts/config --file "$OUT_DIR/.config" -e IPC_NS
+./scripts/config --file "$OUT_DIR/.config" -e DEVTMPFS
+# ./scripts/config --file "$OUT_DIR/.config" -e DEVTMPFS_MOUNT   # 可选，见下
+ ./scripts/config --file "$OUT_DIR/.config" -e USER_NS          # 可选，见下
+|| true
+
 unset LLVM LLVM_IAS KBUILD_COMPILER_STRING
 make O="$OUT_DIR" ARCH=arm64 LOCALVERSION=+ \
   CC="${CC:-}" REAL_CC="${REAL_CC:-}" LD="${LD:-}" \
