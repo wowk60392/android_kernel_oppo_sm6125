@@ -372,6 +372,10 @@ jobs:
         run: |
           set -Eeuo pipefail
           mkdir -p toolchain-assets "$TOOLCHAIN_ROOT"
+          # Forks do not inherit Releases from the upstream repo. Download from
+          # the original author's public release by default; override with
+          # TOOLCHAIN_RELEASE_REPO if the toolchain archive is mirrored elsewhere.
+          TOOLCHAIN_RELEASE_REPO="${TOOLCHAIN_RELEASE_REPO:-hhsbjbsj/android_kernel_oppo_sm6125-resukisu-final}"
           gh release download "$TOOLCHAIN_RELEASE_TAG" \
             --repo "$GITHUB_REPOSITORY" --dir toolchain-assets \
             --pattern 'PCHM30-Snapdragon-LLVM-10.0.7.tar.zst' \
