@@ -21,6 +21,14 @@ test -x scripts/config
 # Docker/droidspaces: POSIX message queues needed for /dev/mqueue mounts
 ./scripts/config --file "$OUT_DIR/.config" -e POSIX_MQUEUE
 ./scripts/config --file "$OUT_DIR/.config" -e POSIX_MQUEUE_SYSCTL || true
+# ---- Docker (runc/containerd) requirements beyond droidspaces ----
+# device cgroup: fixes "bpf_prog_query(BPF_CGROUP_DEVICE) failed: invalid argument"
+# runc needs an available device controller; enable both v1 (CGROUP_DEVICE) path.
+./scripts/config --file "$OUT_DIR/.config" -e CGROUP_DEVICE
+./scripts/config --file "$OUT_DIR/.config" -e CGROUP_PIDS
+# CFS_BANDWIDTH_SCHED not present in this trinket 4.14 tree; skip (only affects --cpu-quota)
+./scripts/config --file "$OUT_DIR/.config" -e CHECKPOINT_RESTORE || true
+./scripts/config --file "$OUT_DIR/.config" -e FHANDLE || true
 
 unset LLVM LLVM_IAS KBUILD_COMPILER_STRING
 make O="$OUT_DIR" ARCH=arm64 LOCALVERSION=+ \
